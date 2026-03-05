@@ -34,8 +34,6 @@ void loop() {
     } else{
       Serial.println("TESTOFF");
     }
-
-    delay(30);
   }
 
   if(test){

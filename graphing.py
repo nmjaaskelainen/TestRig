@@ -3,7 +3,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 ser = serial.Serial()
-ser.port = 'COM10'
+ser.port = 'COM6'
 ser.baudrate = 115200
 
 ser.open()
@@ -52,7 +52,7 @@ while True:
             #plot (non-blocking)
             plt.figure(1)
             plt.clf()
-            plt.plot([int(t) for t in time], [float(v) for v in voltage])
+            plt.plot([float(t) for t in time], [float(v) for v in voltage])
             plt.title(f"Test: {Fname}")
             plt.xlabel("Time (ms)")
             plt.ylabel("Voltage (V)")
