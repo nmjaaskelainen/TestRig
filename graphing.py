@@ -9,7 +9,7 @@ ser.baudrate = 115200
 ser.open()
 
 def getFileName():
-    return datetime.now().strftime("%Y-%m-%d-%H_%M_%S.csv")
+    return datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
 
 onTest = False
 
@@ -43,7 +43,7 @@ while True:
 
         #Post test - do whatever
         if time:
-            with open(Fname, "w") as f: 
+            with open(Fname + ".csv", "w") as f: 
                 f.write("Time (ms), Voltage (V)\n")
                 for t, v in zip(time, voltage):
                     f.write(f"{t},{v}\n")
@@ -57,6 +57,7 @@ while True:
             plt.xlabel("Time (ms)")
             plt.ylabel("Voltage (V)")
             plt.pause(0.1)
+            plt.savefig(Fname + ".png")
             plt.show(block=False)
 
             print("--- READY --- \n \n")
