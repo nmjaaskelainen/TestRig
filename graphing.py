@@ -1,12 +1,15 @@
 import serial
 from datetime import datetime
 import matplotlib.pyplot as plt
+import os
 
 ser = serial.Serial()
 ser.port = 'COM6'
 ser.baudrate = 115200
-
 ser.open()
+
+path = "/Tests/"
+os.chdir(path)
 
 def getFileName():
     return datetime.now().strftime("%Y-%m-%d-%H_%M_%S")

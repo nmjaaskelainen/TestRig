@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
 import glob
 import readline
+import os
+
+path = "/Tests/"
+os.chdir(path)
 
 def complete_filename(text, state):
     return (glob.glob(text+'*.csv')+[None])[state]
