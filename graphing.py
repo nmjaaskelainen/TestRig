@@ -8,7 +8,7 @@ ser.port = 'COM6'
 ser.baudrate = 115200
 ser.open()
 
-path = "/Tests/"
+path = "Tests"
 os.chdir(path)
 
 def getFileName():
@@ -22,16 +22,21 @@ while True:
 
     if raw == "TESTON":
         onTest = True
+        plt.close('all')
         print("--- TEST ON ---")
 
         Fname = getFileName()
 
         time = []
-        voltage = []
+        pressure = []
+        microphone = []
 
         #OnTest - speed matters
         while onTest:
             test = ser.readline().decode().strip()
+            
+            if not test:
+                continue
 
             if test == "TESTOFF":
                 onTest = False
@@ -40,28 +45,36 @@ while True:
                 break
 
             data = test.split(",")
-            if len(data) == 2:
+            if len(data) == 3:
                 time.append(data[0])
-                voltage.append(data[1])
+                pressure.append(data[1])
+                microphone.append(data[2])
 
         #Post test - do whatever
         if time:
             with open(Fname + ".csv", "w") as f: 
-                f.write("Time (ms), Voltage (V)\n")
-                for t, v in zip(time, voltage):
-                    f.write(f"{t},{v}\n")
+                f.write("Time (ms), Pressure (psi), Microphone (V)\n")
+                for t, p, m in zip(time, pressure, microphone):
+                    f.write(f"{t},{p},{m}\n")
             print("--- DATA SAVED ---")
 
-            #plot (non-blocking)
-            plt.figure(1)
-            plt.clf()
-            plt.plot([float(t) for t in time], [float(v) for v in voltage])
-            plt.title(f"Test: {Fname}")
-            plt.xlabel("Time (ms)")
-            plt.ylabel("Voltage (V)")
+            #plot
+            fig, (ax1, ax2) = plt.subplots(2)
+            
+            fig.suptitle(f"Test: {Fname}")
+            ax1.plot([float(t) for t in time], [float(p) for p in pressure])
+            ax2.plot([float(t) for t in time], [float(m) for m in microphone])
+            
+            ax1.set_ylabel("Pressure (psi)")
+            ax1.set_ylim(0, 1000)
+            ax2.set_ylabel("Microphone (V)")
+            ax2.set_ylim(0, 5)
+            ax2.set_xlabel("Time (ms)")
+
+            fig.tight_layout(rect=[0, 0.03, 1, 0.95])
             plt.pause(0.1)
-            plt.savefig(Fname + ".png")
-            plt.show(block=False)
+            plt.show()
+            plt.savefig(Fname)
 
             print("--- READY --- \n \n")
 

@@ -2,9 +2,11 @@
 
 #define Bpin 2
 #define Spin A5
+#define Mpin A7
 
 bool test = false;
 unsigned long start = 0;
+unsigned long last = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -13,6 +15,7 @@ void setup() {
 
   pinMode(Bpin, INPUT_PULLUP);
   pinMode(Spin, INPUT);
+  pinMode(Mpin, INPUT);
 }
 
 void loop() {
@@ -37,11 +40,20 @@ void loop() {
   }
 
   if(test){
-    unsigned long dt = millis() - start;
-    float Sin = analogRead(Spin) / 1023.0 * 5.0;
+    unsigned long current = millis();
 
-    Serial.print(dt);
-    Serial.print(",");
-    Serial.println(Sin);
+    if(current - last >= 1){
+      last = current;
+
+      unsigned long dt = millis() - start;
+      float Sin = analogRead(Spin) / 1023.0 * 5.0 * 250;
+      float Min = analogRead(Mpin) / 1023.0 * 5.0;
+
+      Serial.print(dt);
+      Serial.print(",");
+      Serial.print(Sin);
+      Serial.print(",");
+      Serial.println(Min);
+    }
   }
 }

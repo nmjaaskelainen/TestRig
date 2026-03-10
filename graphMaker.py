@@ -3,7 +3,7 @@ import glob
 import readline
 import os
 
-path = "/Tests/"
+path = "Tests"
 os.chdir(path)
 
 def complete_filename(text, state):
@@ -19,7 +19,8 @@ while True:
         with open(Fname) as f:
 
             time = []
-            voltage = []
+            pressure = []
+            microphone = []
 
             C1 = ""
             CN = False
@@ -27,27 +28,35 @@ while True:
                 C1 = input("Do you want to edit the title? (Y / N): ")
                 
                 if C1 == "Y":
-                    name2 = input("Input new name: ")
+                    Fname = input("Input new name: ")
                     CN = True
 
-            Fname = name2
+            titles = f.readline().strip().split(",")
+            fig, (ax1, ax2) = plt.subplots(2)
 
-            titles = f.readline().split(",")
-
-            plt.title(Fname)
-            plt.xlabel(titles[0])
-            plt.ylabel(titles[1])
+            print(titles)
+            
+            ax1.set_ylabel(titles[1])
+            ax1.set_ylim(0, 1000)
+            ax2.set_ylabel(titles[2])
+            ax2.set_ylim(0, 5)
+            ax2.set_xlabel(titles[0])
 
             for x in f:
                 data = x.split(",")
 
                 time.append(data[0])
-                voltage.append(data[1])
+                pressure.append(data[1])
+                microphone.append(data[2])
 
-            plt.plot([float(t) for t in time], [float(v) for v in voltage])
+            fig.suptitle(Fname)
+            ax1.plot([float(t) for t in time], [float(p) for p in pressure])
+            ax2.plot([float(t) for t in time], [float(m) for m in microphone])
+            
+            fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 
             if CN:
-                plt.savefig(name2 + ".png")
+                plt.savefig(Fname + ".png")
 
             plt.show()
 
