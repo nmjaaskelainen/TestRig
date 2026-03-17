@@ -46,12 +46,12 @@ void loop() {
       last = current;
 
       unsigned long dt = millis() - start;
-      float Sin = analogRead(Spin) / 1023.0 * 5.0 * 250;
+      float Sin = analogRead(Spin) / 1023.0 * 5.0 - 0.5;
       float Min = analogRead(Mpin) / 1023.0 * 5.0;
 
       Serial.print(dt);
       Serial.print(",");
-      Serial.print(Sin);
+      Serial.print(Sin * 250.0);
       Serial.print(",");
       Serial.println(Min);
     }

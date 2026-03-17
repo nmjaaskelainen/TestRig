@@ -6,6 +6,9 @@ import os
 path = "Tests"
 os.chdir(path)
 
+XMIN = 6025
+XMAX = 6100
+
 def complete_filename(text, state):
     return (glob.glob(text+'*.csv')+[None])[state]
 
@@ -37,9 +40,11 @@ while True:
             print(titles)
             
             ax1.set_ylabel(titles[1])
-            ax1.set_ylim(0, 1000)
+            ax1.set_ylim(0, 50)
+            ax1.set_xlim(XMIN, XMAX)
             ax2.set_ylabel(titles[2])
             ax2.set_ylim(0, 5)
+            ax2.set_xlim(XMIN, XMAX)
             ax2.set_xlabel(titles[0])
 
             for x in f:
