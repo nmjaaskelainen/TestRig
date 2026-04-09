@@ -29,7 +29,6 @@ while True:
 
         time = []
         pressure = []
-        microphone = []
 
         #OnTest - speed matters
         while onTest:
@@ -45,36 +44,33 @@ while True:
                 break
 
             data = test.split(",")
-            if len(data) == 3:
+            if len(data) > 1:
                 time.append(data[0])
                 pressure.append(data[1])
-                microphone.append(data[2])
 
         #Post test - do whatever
         if time:
             with open(Fname + ".csv", "w") as f: 
-                f.write("Time (ms), Pressure (psi), Microphone (V)\n")
-                for t, p, m in zip(time, pressure, microphone):
-                    f.write(f"{t},{p},{m}\n")
+                f.write(f"TIME:, {Fname}\n")
+                f.write("Time (ms), Pressure (psi)\n")
+                for t, p in zip(time, pressure):
+                    f.write(f"{t},{p}\n")
             print("--- DATA SAVED ---")
 
             #plot
-            fig, (ax1, ax2) = plt.subplots(2)
+            fig, ax1 = plt.subplots()
             
             fig.suptitle(f"Test: {Fname}")
             ax1.plot([float(t) for t in time], [float(p) for p in pressure])
-            ax2.plot([float(t) for t in time], [float(m) for m in microphone])
             
             ax1.set_ylabel("Pressure (psi)")
             ax1.set_ylim(0, 1000)
-            ax2.set_ylabel("Microphone (V)")
-            ax2.set_ylim(0, 5)
-            ax2.set_xlabel("Time (ms)")
+            ax1.set_xlabel("Time (ms)")
 
             fig.tight_layout(rect=[0, 0.03, 1, 0.95])
             plt.pause(0.1)
-            plt.show()
             plt.savefig(Fname)
+            plt.show()
 
             print("--- READY --- \n \n")
 
