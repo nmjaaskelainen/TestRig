@@ -34,15 +34,16 @@ while True:
                     Fname = input("\n Input new name: ")
                     CN = True
 
-            XMIN = input("\n Set XMIN: ")
-            XMAX = input("\n Set XMAX: ")
+            XMIN = float(input("\n Set XMIN: "))
+            XMAX = float(input("\n Set XMAX: "))
 
             titles = f.readline().strip().split(",")
             fig, ax1 = plt.subplots()
             
-            ax1.set_ylabel(titles[1])
+            ax1.set_ylabel("Pressure (psi)")
+            ax1.set_xlabel("Time (ms)")
             ax1.set_ylim(0, YMAX)
-            ax1.set_xlim(XMIN, XMAX)
+            ax1.set_xlim(left=XMIN, right=XMAX)
 
             for x in f:
                 data = x.split(",")
@@ -52,8 +53,6 @@ while True:
 
             fig.suptitle(Fname)
             ax1.plot([float(t) for t in time], [float(p) for p in pressure])
-            
-            fig.tight_layout(rect=[0, 0.03, 1, 0.95])
 
             if CN:
                 plt.savefig(Fname + ".png")
