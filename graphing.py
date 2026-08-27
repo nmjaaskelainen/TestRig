@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import os
 
 ser = serial.Serial()
-ser.port = 'COM6'
+ser.port = 'COM3'
 ser.baudrate = 115200
 ser.open()
 

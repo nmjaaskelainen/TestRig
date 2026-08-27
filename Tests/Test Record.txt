@@ -1,8 +1,16 @@
-T1 - Initial test, test rig failure
-T2 - Cartridge puncture noise testing
-T3 - Vest thump, mic far from inlet
-T4 - Vest thump, no mic data
-T5 - Vest thump, mic close to inlet
-T6 - Initial expansion tank test, catastrophic failure
+Old Style
+
+T01 - Initial test, test rig failure
+T02 - Cartridge puncture noise testing
+T03 - Vest thump, mic far from inlet
+T04 - Vest thump, no mic data
+T05 - Vest thump, mic close to inlet
+T06 - Initial expansion tank test, catastrophic failure
 
 Lossless audio files (.wav) then post processing 
+
+New Style
+T07 - Baseline vest test 33gf cartridge 100.3 db
+T08 - Vest test 24g cartridge (No pressure data)
+T09 - Expansion tank (silicone)
+T10 - Expansion tank (rubber)
