@@ -1,0 +1,9 @@
+ Input file name: T09\T9.wav                                                                                                                                 
+ Input start time: 30                                                                                                                                        
+ Input final time: 45     
+                                                                                                                                    
+Sampled at 88200Hz                                                                                                                                           
+Total recording is 45.00s                                                                                                                                    
+Showing 15.00s                                                                                                                                               
+Max dBFS is -0.00 dBFS                                                                                                                                       
+Most signifigant frequency is 4.27 Hz     

@@ -26,6 +26,11 @@ while True:
 
     samplerate, data = wavfile.read(Fname)
 
+    print(f"Sampled at {samplerate}Hz")
+
+    length = data.shape[0] / samplerate + start
+    print(f"Total recording is {length:.2f}s")
+
     if start and end:
         start = int(start)
         end = int(end)
@@ -34,17 +39,10 @@ while True:
         endSample = int(end * samplerate)
 
         data = data[startSample:endSample]
-    else:
-        start = 0
 
-    print(f"Sampled at {samplerate}Hz")
-
-    length = data.shape[0] / samplerate + start
-    print(f"Total recording is {length:.2f}s")
-
-    if start and end:
         print(f"Showing {end-start:.2f}s")
-
+    else:
+        start = 0     
 
     fig1 = plt.figure()
     #normalize audio data
