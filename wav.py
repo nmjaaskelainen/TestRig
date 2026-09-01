@@ -21,12 +21,29 @@ while True:
     readline.set_completer(complete_filename)
     Fname = input("\n Input file name: ")
 
+    start = input("\n Input start time: ")
+    end = input("\n Input final time: ")
+
     samplerate, data = wavfile.read(Fname)
+
+    if start and end:
+        start = int(start)
+        end = int(end)
+
+        startSample = int(start * samplerate)
+        endSample = int(end * samplerate)
+
+        data = data[startSample:endSample]
+    else:
+        start = 0
 
     print(f"Sampled at {samplerate}Hz")
 
-    length = data.shape[0] / samplerate
-    print(f"Recording is {length:.2f}s")
+    length = data.shape[0] / samplerate + start
+    print(f"Total recording is {length:.2f}s")
+
+    if start and end:
+        print(f"Showing {end-start:.2f}s")
 
 
     fig1 = plt.figure()
@@ -41,7 +58,7 @@ while True:
 
     print(f"Max dBFS is {dbMax:.2f} dBFS")
 
-    time = np.linspace(0., length, data.shape[0])
+    time = np.linspace(start, length, data.shape[0])
     plt.plot(time, db)
     plt.title("dB versus Time")
     plt.xlabel("Time [s]")

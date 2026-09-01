@@ -1,0 +1,10 @@
+ Input file name: T07\BaselineTest1.wav                                                                                                                      
+                                                                                                                                                             
+ Input start time: 45                                                                                                                                        
+ Input final time: 65      
+                                                                                                                                   
+Sampled at 88200Hz                                                                                                                                           
+Total recording is 63.35s                                                                                                                                    
+Showing 20.00s                                                                                                                                               
+Max dBFS is -24.26 dBFS                                                                                                                                      
+Most signifigant frequency is 722.79 Hz   
