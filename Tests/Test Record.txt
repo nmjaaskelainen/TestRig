@@ -14,3 +14,4 @@ T07 - Baseline vest test 33gf cartridge 100.3 db
 T08 - Vest test 24g cartridge (No pressure data)
 T09 - Expansion tank (silicone)
 T10 - Expansion tank (rubber)
+T11 - Pneumatic suppressor (Fitting failure)
