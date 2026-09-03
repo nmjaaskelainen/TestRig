@@ -1,3 +1,10 @@
+#calibrate the microhphone dbfs to db
+#frequency magnitude to db
+#window freq plot more (only include actual test)
+#consider 2 freq plots, only peak and peak plus plateau after
+
+#beautify the plots, bigger text, bigger axis, more readable
+
 #using scipy, get fourier and db plot
 from scipy.io import wavfile
 from scipy.fft import rfft, rfftfreq
@@ -28,7 +35,7 @@ while True:
 
     print(f"Sampled at {samplerate}Hz")
 
-    length = data.shape[0] / samplerate + start
+    length = data.shape[0] / samplerate
     print(f"Total recording is {length:.2f}s")
 
     if start and end:
@@ -42,7 +49,8 @@ while True:
 
         print(f"Showing {end-start:.2f}s")
     else:
-        start = 0     
+        start = 0 
+        end = length    
 
     fig1 = plt.figure()
     #normalize audio data
@@ -56,7 +64,7 @@ while True:
 
     print(f"Max dBFS is {dbMax:.2f} dBFS")
 
-    time = np.linspace(start, length, data.shape[0])
+    time = np.linspace(start, end, data.shape[0])
     plt.plot(time, db)
     plt.title("dB versus Time")
     plt.xlabel("Time [s]")
@@ -76,10 +84,11 @@ while True:
     print(f"Most signifigant frequency is {freqMax:.2f} Hz")
 
     plt.plot(frequencies, magnitude, color='blue')
-    plt.title("Frequency vs Magnitude")
+    plt.title("Frequency versus Magnitude")
     plt.xlabel("Frequency (Hz)")
     plt.ylabel("Magnitude")
     plt.xscale('log')
-    plt.xlim(1, 44000)
+    plt.xlim(50, 25000)
+    plt.ylim(0, 10E10)
 
     plt.show()
