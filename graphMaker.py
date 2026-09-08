@@ -6,9 +6,9 @@ import os
 path = "Tests"
 os.chdir(path)
 
-XMIN = 0
-XMAX = 10000
-YMAX = 400
+XMIN = 11000
+XMAX = 13000
+YMAX = 600
 
 def complete_filename(text, state):
     return (glob.glob(text+'*.csv')+[None])[state]
@@ -34,9 +34,6 @@ while True:
                     Fname = input("\n Input new name: ")
                     CN = True
 
-            XMIN = float(input("\n Set XMIN: "))
-            XMAX = float(input("\n Set XMAX: "))
-
             titles = f.readline().strip().split(",")
             fig, ax1 = plt.subplots()
             
@@ -50,6 +47,9 @@ while True:
 
                 time.append(data[0])
                 pressure.append(data[1])
+
+            time.pop(0)
+            pressure.pop(0)
 
             fig.suptitle(Fname)
             ax1.plot([float(t) for t in time], [float(p) for p in pressure])
