@@ -19,3 +19,6 @@ T12 - Pneumatic suppressor V2
 T13 - 24g cartridge
 T14 - Baseline 2 33g
 T15 - Pneumatic suppressor V2 (Gasket)
+T16 - Pneumatic suppressor V2.1 (Fitting failure)
+T17 - Pneumatic suppressor V2.1 (Fitting failure)
+T18 - Pneumatic suppressor V2.1
