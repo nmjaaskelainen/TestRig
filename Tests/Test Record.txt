@@ -10,8 +10,12 @@ T06 - Initial expansion tank test, catastrophic failure
 Lossless audio files (.wav) then post processing 
 
 New Style
-T07 - Baseline vest test 33gf cartridge 100.3 db
+T07 - Baseline vest test 33g cartridge 100.3 db
 T08 - Vest test 24g cartridge (No pressure data)
 T09 - Expansion tank (silicone)
 T10 - Expansion tank (rubber)
 T11 - Pneumatic suppressor (Fitting failure)
+T12 - Pneumatic suppressor V2
+T13 - 24g cartridge
+T14 - Baseline 2 33g
+T15 - Pneumatic suppressor V2 (Gasket)

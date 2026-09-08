@@ -39,8 +39,8 @@ while True:
     print(f"Total recording is {length:.2f}s")
 
     if start and end:
-        start = int(start)
-        end = int(end)
+        start = float(start)
+        end = float(end)
 
         startSample = int(start * samplerate)
         endSample = int(end * samplerate)
