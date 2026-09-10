@@ -1,0 +1,9 @@
+ Input file name: T10\t10.wav                                                                                                                                
+ Input start time: 40                                                                                                                                        
+ Input final time: 50     
+                                                                                                                                    
+Sampled at 88200Hz                                                                                                                                           
+Total recording is 50.00s                                                                                                                                    
+Showing 10.00s                                                                                                                                               
+Max dBFS is -0.00 dBFS                                                                                                                                       
+Most signifigant frequency is 3.90 Hz 

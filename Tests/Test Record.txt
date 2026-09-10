@@ -1,0 +1,24 @@
+Old Style
+
+T01 - Initial test, test rig failure
+T02 - Cartridge puncture noise testing
+T03 - Vest thump, mic far from inlet
+T04 - Vest thump, no mic data
+T05 - Vest thump, mic close to inlet
+T06 - Initial expansion tank test, catastrophic failure
+
+Lossless audio files (.wav) then post processing 
+
+New Style
+T07 - Baseline vest test 33g cartridge 100.3 db
+T08 - Vest test 24g cartridge (No pressure data)
+T09 - Expansion tank (silicone)
+T10 - Expansion tank (rubber)
+T11 - Pneumatic suppressor (Fitting failure)
+T12 - Pneumatic suppressor V2
+T13 - 24g cartridge
+T14 - Baseline 2 33g
+T15 - Pneumatic suppressor V2 (Gasket)
+T16 - Pneumatic suppressor V2.1 (Fitting failure)
+T17 - Pneumatic suppressor V2.1 (Fitting failure)
+T18 - Pneumatic suppressor V2.1

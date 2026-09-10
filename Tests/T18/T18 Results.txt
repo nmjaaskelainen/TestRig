@@ -1,0 +1,8 @@
+ Input file name: T18\T18.wav                                                                                                               
+ Input start time: 21                                                                                                                       
+ Input final time: 23                                                                                                                       
+Sampled at 88200Hz                                                                                                                          
+Total recording is 30.04s                                                                                                                   
+Showing 2.00s                                                                                                                               
+Max dBFS is -28.36 dBFS                                                                                                                     
+Most signifigant frequency is 1041.50 Hz 
