@@ -22,3 +22,4 @@ T15 - Pneumatic suppressor V2 (Gasket)
 T16 - Pneumatic suppressor V2.1 (Fitting failure)
 T17 - Pneumatic suppressor V2.1 (Fitting failure)
 T18 - Pneumatic suppressor V2.1
+T19 - Mufflfer V1 (Split in half)
