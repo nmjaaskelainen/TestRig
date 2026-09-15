@@ -1,0 +1,51 @@
+[
+    {
+        "TestNumber": "T07",
+        "Description": "Baseline 1",
+        "MaxdBFS": -24.26,
+        "SignificantFrequencyHz": 722.67,
+        "FrequencyAmplitude": 34.47
+    },
+    {
+        "TestNumber": "T08",
+        "Description": "24g cartridge 1",
+        "MaxdBFS": -24.45,
+        "SignificantFrequencyHz": 1059.0,
+        "FrequencyAmplitude": 21.44
+    },
+    {
+        "TestNumber": "T12",
+        "Description": "PS V2",
+        "MaxdBFS": -12.49,
+        "SignificantFrequencyHz": 45.33,
+        "FrequencyAmplitude": 344.13
+    },
+    {
+        "TestNumber": "T13",
+        "Description": "24g cartridge 2",
+        "MaxdBFS": -29.73,
+        "SignificantFrequencyHz": 582.0,
+        "FrequencyAmplitude": 7.57
+    },
+    {
+        "TestNumber": "T14",
+        "Description": "Baseline 2",
+        "MaxdBFS": -29.48,
+        "SignificantFrequencyHz": 1656.0,
+        "FrequencyAmplitude": 10.19
+    },
+    {
+        "TestNumber": "T15",
+        "Description": "PS V2 (Gasket)",
+        "MaxdBFS": -9.35,
+        "SignificantFrequencyHz": 954.0,
+        "FrequencyAmplitude": 64.48
+    },
+    {
+        "TestNumber": "T18",
+        "Description": "PS V2.1",
+        "MaxdBFS": -28.36,
+        "SignificantFrequencyHz": 1041.5,
+        "FrequencyAmplitude": 11.22
+    }
+]
