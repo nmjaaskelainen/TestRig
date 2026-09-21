@@ -61,9 +61,9 @@ def process_test(test_no, base_dir="Tests"):
         print(f"[-] {test_no}: Invalid JSON formatting ({e})")
         return None
 
-    # if not time_data.get('TestSuccess', False):
-    #     print(f"[-] {test_no}: Skipped (Test failed)")
-    #     return None
+    if not time_data.get('TestSuccess', False):
+        print(f"[-] {test_no}: Skipped (Test failed)")
+        return None
 
     if not os.path.exists(wav_path):
         print(f"[-] {test_no}: Missing audio file ({test_no}.wav)")
