@@ -11,7 +11,6 @@ from scipy.fft import rfft, rfftfreq
 import glob
 import os
 import readline
-import scipy.io
 import matplotlib.pyplot as plt
 import numpy as np
 

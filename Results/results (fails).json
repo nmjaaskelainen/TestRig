@@ -1,0 +1,37 @@
+[
+    {
+        "TestNumber": "T09",
+        "Description": "",
+        "MaxdBFS": -0.0,
+        "SignificantFrequencyHz": 4.5,
+        "FrequencyAmplitude": 2114.46
+    },
+    {
+        "TestNumber": "T10",
+        "Description": "",
+        "MaxdBFS": -0.0,
+        "SignificantFrequencyHz": 4.0,
+        "FrequencyAmplitude": 1455.28
+    },
+    {
+        "TestNumber": "T11",
+        "Description": "",
+        "MaxdBFS": -13.01,
+        "SignificantFrequencyHz": 559.5,
+        "FrequencyAmplitude": 48.68
+    },
+    {
+        "TestNumber": "T16",
+        "Description": "",
+        "MaxdBFS": -7.16,
+        "SignificantFrequencyHz": 300.37,
+        "FrequencyAmplitude": 120.98
+    },
+    {
+        "TestNumber": "T17",
+        "Description": "",
+        "MaxdBFS": -2.14,
+        "SignificantFrequencyHz": 1359.95,
+        "FrequencyAmplitude": 121.69
+    }
+]
