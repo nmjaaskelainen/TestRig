@@ -26,3 +26,5 @@ T19 - Mufflfer V1 (Split in half)
 T20 - Pneumatic suppressor V3 (Exploded)
 
 T21 - Pneumatic suppressor V3 & new puncture mechanism
+T22 - Pneumatic suppressor V3 (real)
+T23 - New puncture Baseline

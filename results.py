@@ -3,8 +3,10 @@ import json
 import re
 from datetime import datetime
 import numpy as np
+import numpy.typing as npt
 from scipy.io import wavfile
 from scipy.fft import rfft, rfftfreq
+import math
 
 def parse_test_inputs(input_str):
     """
@@ -69,45 +71,103 @@ def process_test(test_no, base_dir="Tests"):
         print(f"[-] {test_no}: Missing audio file ({test_no}.wav)")
         return None
 
-    samplerate, raw_data = wavfile.read(wav_path)
-
-    if raw_data.ndim > 1:
-        raw_data = raw_data.mean(axis=1)
-
     min_time = time_data.get('MinTime', 0.0)
-    max_time = time_data.get('MaxTime', raw_data.shape[0] / samplerate)
+    max_time = time_data.get('MaxTime', 99)
 
-    start_sample = max(0, int(min_time * samplerate))
-    end_sample = min(len(raw_data), int(max_time * samplerate))
-    
-    if start_sample >= end_sample:
+    if min_time >= max_time:
         print(f"[-] {test_no}: Invalid time slicing parameters")
         return None
 
-    sliced_data = raw_data[start_sample:end_sample]
+    dbArray, dbRMS, freqArray = wavDecode(wav_path, min_time, max_time)
 
-    # db
-    data_norm = normalize_audio(sliced_data)
-    epsilon = 1e-10
-    db_series = 20 * np.log10(np.abs(data_norm) + epsilon)
-    max_dbfs = float(np.max(db_series))
-
-    # fft
-    fft_spectrum = rfft(data_norm)
-    magnitude = np.abs(fft_spectrum)
-    frequencies = rfftfreq(len(data_norm), d=1.0 / samplerate)
-
-    peak_idx = np.argmax(magnitude)
-    peak_freq = float(frequencies[peak_idx])
-    peak_amplitude = float(magnitude[peak_idx])
+    print("TEST")
+    print(freqArray[np.argmax(freqArray[:, 0]):, 1])
 
     return {
         "TestNumber": test_no,
         "Description": "",
-        "MaxdBFS": round(max_dbfs, 2),
-        "SignificantFrequencyHz": round(peak_freq, 2),
-        "FrequencyAmplitude": round(peak_amplitude, 2)
+        "MaxdBFS": round(max(dbArray[:, 1]), 2),
+        "dBFSrms": round(max(dbRMS[:, 1]), 2),
+        "SignificantFrequencyHz": round(max(freqArray[:, 0]), 2),
+        "FrequencyAmplitude": round(freqArray[np.argmax(freqArray[:, 0]):, 1].item(), 2)
     }
+
+@staticmethod
+def wavDecode(Fname:str, start:int, end:int) -> tuple[npt.ArrayLike, npt.ArrayLike, npt.ArrayLike]:
+        samplerate, data = wavfile.read(Fname)
+
+        print(f"Sampled at {samplerate}Hz")
+
+        length = data.shape[0] / samplerate
+        print(f"Total recording is {length:.2f}s")
+
+        if start and end:
+            start = float(start)
+            end = float(end)
+
+            startSample = int(start * samplerate)
+            endSample = int(end * samplerate)
+
+            data = data[startSample:endSample]
+
+            print(f"Showing {end-start:.2f}s")
+
+        else:
+            start = 0 
+            end = length    
+
+        #normalize audio data
+        dataNorm = data / 2147483648.0
+
+        #avoid log 0 via epsilon
+        epsilon = 1e-10
+        db = 20 * np.log10(np.abs(dataNorm) + epsilon)
+
+        dbMax = max(db)
+
+        print(f"Max dBFS is {dbMax:.2f} dBFS")
+
+        time = np.linspace(start, end, data.shape[0])
+
+        dbArray = np.stack((time, db), axis=1)
+        dbRMS = rollingAverage(dbArray)
+
+        RMSmax = max(dbRMS[:, 1])
+        print(f"Max dBFS RMS is {RMSmax:.2f} dBFS")
+
+        fft_spectrum = rfft(data)
+        magnitude = np.abs(fft_spectrum)
+
+        frequencies = rfftfreq(len(data), d=1/samplerate)
+
+        index = np.argmax(magnitude)
+        freqMax = frequencies[index]
+
+        print(f"Most signifigant frequency is {freqMax:.2f} Hz")
+
+        freqArray = np.stack((frequencies, magnitude), axis=1)
+
+        return dbArray, dbRMS, freqArray
+
+@staticmethod
+def rollingAverage(arr:npt.ArrayLike) -> npt.ArrayLike:
+        sampleWindow = 0.010 #10 ms (in seconds)
+
+        time = arr[:, 0]
+        vals = arr[:, 1]
+
+        samples = len(time)
+        aTPS = (np.max(time) - np.min(time)) / samples #average time per sample
+        numSPW = round(sampleWindow / aTPS) #number of samples per window
+
+        valsSquar = vals ** 2
+        kernel = np.ones(numSPW) #kernel is the filter to apply, moving average is a bunch of 1's
+        sumSquar = np.convolve(valsSquar, kernel, mode="valid")  #convolving is complicated but 
+        rmsVals = np.sqrt(sumSquar / numSPW)
+        offset = numSPW // 2
+
+        time = time[offset : offset + len(rmsVals)] #trim time to exclude the un-rms-able values
+        return np.column_stack((time, -rmsVals))
 
 def main():
     base_dir = "Tests"
@@ -116,7 +176,7 @@ def main():
         return
 
     print("=== Test Results Collector ===")
-    user_input = input("Enter test numbers/ranges (e.g. T01, T07-T19): ").strip()
+    user_input = input("Enter test numbers/ranges (e.g. TXX, TXX-TXX): ").strip()
 
     tests_to_process = parse_test_inputs(user_input)
 
