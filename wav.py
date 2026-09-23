@@ -31,6 +31,8 @@ class wavWindow(QtWidgets.QMainWindow):
         self.rmsPen  = pg.mkPen(color=(0, 0, 0), width=3)
         self.freqPen = pg.mkPen(color=(0, 0, 255), width=2)
 
+        label_style = {"color": "black", "font-size": "12pt"}
+
         dbArray, dbRMS, freqArray = self.wavDecode()
 
         self.setWindowTitle("dBFS versus Time") #self window is dBFS
@@ -38,12 +40,19 @@ class wavWindow(QtWidgets.QMainWindow):
         self.dbPlot = pg.PlotWidget()
         self.setCentralWidget(self.dbPlot)
         self.dbPlot.setBackground("w")
+        self.dbPlot.addLegend(labelTextColor='k')
+
         self.dbPlot.plot(dbArray, pen=self.dbPen, name="dBFS")
-        self.dbPlot.plot(dbRMS, pen=self.rmsPen, name="RMS")
-        self.dbPlot.setLabels(bottom="Time (s)", 
-                              left="dBFS", 
-                              title="dBFS versus Time")
-        self.dbPlot.setLimits(yMin=-100,   yMax=0)
+        self.dbPlot.plot(dbRMS, pen=self.rmsPen, name="Rolling Avg")
+        self.dbPlot.setTitle("dBFS versus Time", color="k")
+        self.dbPlot.setLabel("bottom", "Time (s)", **label_style)
+        self.dbPlot.setLabel("left", "dBFS", **label_style)
+        self.dbPlot.getAxis("bottom").setTextPen("k")
+        self.dbPlot.getAxis("bottom").setPen("k")
+        self.dbPlot.getAxis("left").setTextPen("k")
+        self.dbPlot.getAxis("left").setPen("k")
+
+        self.dbPlot.setLimits(yMin=-100, yMax=0)
         self.dbPlot.setYRange(-100, 0, padding=0)
 
         #make second freqWindow
@@ -54,13 +63,19 @@ class wavWindow(QtWidgets.QMainWindow):
         self.freqPlot = pg.PlotWidget()
         self.freqPlot.setBackground("w")
         self.freqPlot.plot(freqArray, pen=self.freqPen)
-        self.freqPlot.setLabels(bottom="Frequency (Hz)", 
-                                left="Magnitude", 
-                                title="Frequency versus Magnitude")
+
+        self.freqPlot.setTitle("Frequency versus Magnitude", color="k")
+        self.freqPlot.setLabel("bottom", "Frequency (Hz)", **label_style)
+        self.freqPlot.setLabel("left", "Magnitude", **label_style)
+        self.freqPlot.getAxis("bottom").setTextPen("k")
+        self.freqPlot.getAxis("bottom").setPen("k")
+        self.freqPlot.getAxis("left").setTextPen("k")
+        self.freqPlot.getAxis("left").setPen("k")
+
         xMinLog = math.log10(10)    
         xMaxLog = math.log10(30000)
         self.freqPlot.setLimits(xMin=xMinLog,   xMax=xMaxLog,   
-                                yMin=0,   yMax=10E10)
+                                yMin=0,         yMax=5E10)
         self.freqPlot.setLogMode(x=True, y=False)
         self.freqPlot.setXRange(xMinLog, xMaxLog, padding=0)
         self.freqPlot.setYRange(0, 10E10, padding=0)
@@ -147,7 +162,7 @@ def rollingAverage(arr:npt.ArrayLike) -> npt.ArrayLike:
 
         valsSquar = vals ** 2
         kernel = np.ones(numSPW) #kernel is the filter to apply, moving average is a bunch of 1's
-        sumSquar = np.convolve(valsSquar, kernel, mode="valid")  #convolving is complicated but 
+        sumSquar = np.convolve(valsSquar, kernel, mode="valid")  #convolving is complicated ``
         rmsVals = np.sqrt(sumSquar / numSPW)
         offset = numSPW // 2
 
@@ -155,7 +170,6 @@ def rollingAverage(arr:npt.ArrayLike) -> npt.ArrayLike:
         return np.column_stack((time, -rmsVals))
 
             
-
 app = QtWidgets.QApplication([])
 main = wavWindow()
 main.show()

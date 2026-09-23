@@ -80,16 +80,15 @@ def process_test(test_no, base_dir="Tests"):
 
     dbArray, dbRMS, freqArray = wavDecode(wav_path, min_time, max_time)
 
-    print("TEST")
-    print(freqArray[np.argmax(freqArray[:, 0]):, 1])
+    maxFreqInd = np.argmax(freqArray[:, 1])
 
     return {
         "TestNumber": test_no,
         "Description": "",
         "MaxdBFS": round(max(dbArray[:, 1]), 2),
         "dBFSrms": round(max(dbRMS[:, 1]), 2),
-        "SignificantFrequencyHz": round(max(freqArray[:, 0]), 2),
-        "FrequencyAmplitude": round(freqArray[np.argmax(freqArray[:, 0]):, 1].item(), 2)
+        "SignificantFrequencyHz": round(float(freqArray[maxFreqInd, 0]), 2),
+        "FrequencyAmplitude": round(float(freqArray[maxFreqInd, 1]), 2)
     }
 
 @staticmethod
