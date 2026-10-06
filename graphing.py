@@ -2,6 +2,9 @@ import serial
 from datetime import datetime
 import matplotlib.pyplot as plt
 import os
+import sys
+from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel, QVBoxLayout, QWidget, QPushButton
+from PyQt6.QtCore import Qt
 
 ser = serial.Serial()
 ser.port = 'COM3'
@@ -76,3 +79,25 @@ while True:
 
         else:
             print("--- ERROR ---")   
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("My First PyQt6 App")
+        self.resize(400, 200)
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
+        self.label = QLabel("Hello! Click the button below.", self)
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.button = QPushButton("Click Me", self)
+        self.button.clicked.connect(self.on_button_click)
+
+        layout = QVBoxLayout()
+        layout.addWidget(self.label)
+        layout.addWidget(self.button)
+        central_widget.setLayout(layout)
+
+    def on_button_click(self):
+        self.label.setText("Button clicked! PyQt6 is working flawlessly.")

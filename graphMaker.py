@@ -6,8 +6,8 @@ import os
 path = "Tests"
 os.chdir(path)
 
-XMIN = 11000
-XMAX = 13000
+XMIN = 5000
+XMAX = 6500
 YMAX = 600
 
 def complete_filename(text, state):
