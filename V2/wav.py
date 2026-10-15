@@ -297,6 +297,8 @@ class wavWindow(QMainWindow):
             self.maxTimeSlider.setValue(maxVal)
             self.maxTimeSlider.blockSignals(False)
 
+            self.resetPlaybackToStart()
+
             self.syncEditFieldsFromSliders()
             self.updatePlot()
 

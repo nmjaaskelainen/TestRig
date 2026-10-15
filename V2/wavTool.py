@@ -1,6 +1,5 @@
 import os
 import json
-import re
 import numpy as np
 import numpy.typing as npt
 from scipy.io import wavfile
