@@ -9,7 +9,7 @@ T06 - Initial expansion tank test, catastrophic failure
 
 Lossless audio files (.wav) then post processing 
 
-New Style
+New Style (at 12 dB)
 T07 - Baseline vest test 33g cartridge 100.3 db
 T08 - Vest test 24g cartridge (No pressure data)
 T09 - Expansion tank (silicone)
@@ -37,3 +37,6 @@ T29 - New puncture Baseline 3 (Take 2) (iced out)
 T30 - Pneumatic suppressor V3 (real) (with audio)
 T31 - Pneumatic suppressor V3 (real) (again)
 T32 - Pneumatic suppressor V3 with 24g
+
+New New audio
+T33 - Interlude mic testing (12dB - 24dB - 36dB)
