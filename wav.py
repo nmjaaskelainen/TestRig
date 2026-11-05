@@ -17,8 +17,8 @@ import numpy as np
 import numpy.typing as npt
 import math
 
-path = "Tests"
-os.chdir(path)
+# path = "Tests"
+# os.chdir(path)
 
 def complete_filename(text, state):
     return (glob.glob(text+'*.wav')+[None])[state]
@@ -117,7 +117,15 @@ class wavWindow(QtWidgets.QMainWindow):
             end = length    
 
         #normalize audio data
-        dataNorm = data / 2147483648.0
+        if data.dtype == np.int16:
+            dataNorm = data / 32768.0
+        elif data.dtype == np.int32:
+            dataNorm = data / 2147483648.0
+        elif data.dtype == np.uint8:
+            dataNorm = (data - 128.0) / 128.0
+
+        if data.dtype == np.float32:
+            dataNorm = data
 
         #avoid log 0 via epsilon
         epsilon = 1e-10
