@@ -17,8 +17,8 @@ import numpy as np
 import numpy.typing as npt
 import math
 
-# path = "Tests"
-# os.chdir(path)
+path = "Tests"
+os.chdir(path)
 
 def complete_filename(text, state):
     return (glob.glob(text+'*.wav')+[None])[state]

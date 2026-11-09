@@ -115,8 +115,15 @@ def wavDecode(Fname:str, start:int, end:int) -> tuple[npt.ArrayLike, npt.ArrayLi
             start = 0 
             end = length    
 
-        #normalize audio data
-        dataNorm = data / 2147483648.0
+        #normalize data
+        if data.dtype == np.int16:
+            dataNorm = data / 32768.0
+        elif data.dtype == np.int32:
+            dataNorm = data / 2147483648.0
+        elif data.dtype == np.uint8:
+            dataNorm = (data - 128.0) / 128.0
+        else:
+            dataNorm = data.astype(np.float64)
 
         #avoid log 0 via epsilon
         epsilon = 1e-10

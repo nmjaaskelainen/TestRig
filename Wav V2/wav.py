@@ -12,10 +12,7 @@ from PyQt6.QtWidgets import (
     QHBoxLayout, QWidget, QCheckBox, QListWidget, QListWidgetItem,
     QFileDialog, QMessageBox, QLabel, QSlider, QLineEdit
 )
-import matplotlib
-matplotlib.use("QtAgg")
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+import pyqtgraph as pg
 from wavTool import wavTool
 
 class wavWindow(QMainWindow):
@@ -34,7 +31,7 @@ class wavWindow(QMainWindow):
         self.mediaPlayer.positionChanged.connect(self.onPlaybackPositionChanged)
         self.mediaPlayer.playbackStateChanged.connect(self.onPlaybackStateChanged)
 
-        self.setWindowTitle("Wav Decoder")
+        self.setWindowTitle("Wav Decoder (PyQtGraph)")
         self.resize(1100, 650)
 
         mainWidget = QWidget()
@@ -45,9 +42,37 @@ class wavWindow(QMainWindow):
         sliderLayout = self.makeTimeBar()
         leftLayout.addLayout(sliderLayout)
 
-        self.figure = Figure()
-        self.canvas = FigureCanvas(self.figure)
-        leftLayout.addWidget(self.canvas)
+        # PyQtGraph GraphicsLayoutWidget container for multiple subplots (dB and FFT)
+        self.plotWidget = pg.GraphicsLayoutWidget()
+        leftLayout.addWidget(self.plotWidget)
+
+        # Setup subplots inside the graphics layout
+        self.dbPlot = self.plotWidget.addPlot(row=0, col=0)
+        self.dbPlot.setTitle("Sound Level (dB / dBRMS)")
+        self.dbPlot.setLabel("left", "Level", units="dB")
+        self.dbPlot.setLabel("bottom", "Time", units="s")
+        self.dbPlot.setYRange(-100, 0)
+        self.dbPlot.showGrid(x=True, y=True)
+        self.dbPlot.addLegend()
+
+        self.dbCurve = self.dbPlot.plot(pen=pg.mkPen(color="#B0C4DE", width=1), name="dB")
+        self.dbRmsCurve = self.dbPlot.plot(pen=pg.mkPen(color="#D9534F", width=1.5), name="dBRMS")
+        
+        # Playhead vertical line on dbPlot
+        self.playheadLine = pg.InfiniteLine(angle=90, movable=False, pen=pg.mkPen(color="#E74C3C", width=1.5, style=Qt.PenStyle.DashLine))
+        self.dbPlot.addItem(self.playheadLine)
+
+        self.plotWidget.nextRow()
+
+        self.fftPlot = self.plotWidget.addPlot(row=1, col=0)
+        self.fftPlot.setTitle("Frequency Spectrum")
+        self.fftPlot.setLabel("left", "Magnitude", units="dBFS")
+        self.fftPlot.setLabel("bottom", "Frequency", units="Hz")
+        self.fftPlot.setLogMode(True, False)
+        self.fftPlot.setXRange(np.log10(10), np.log10(30000))
+        self.fftPlot.setYRange(-120, 0)
+        self.fftPlot.showGrid(x=True, y=True, alpha=0.7)
+        self.fftCurve = self.fftPlot.plot(pen=pg.mkPen(color="#2E8B57", width=1))
 
         playbackLayout = self.makePlaybackBar()
         leftLayout.addLayout(playbackLayout)
@@ -330,8 +355,7 @@ class wavWindow(QMainWindow):
         self.playbackTimeEdit.blockSignals(False)
 
         if self.playheadLine is not None:
-            self.playheadLine.set_xdata([minSec, minSec])
-            self.canvas.draw_idle()
+            self.playheadLine.setValue(minSec)
 
     def onPlaybackTimeEdited(self):
         try:
@@ -348,8 +372,7 @@ class wavWindow(QMainWindow):
         self.mediaPlayer.setPosition(int(sec * 1000))
 
         if self.playheadLine is not None:
-            self.playheadLine.set_xdata([sec, sec])
-            self.canvas.draw_idle()
+            self.playheadLine.setValue(sec)
 
     def setSpeed(self, rate: float):
         self.currentSpeed = round(rate, 2)
@@ -437,8 +460,7 @@ class wavWindow(QMainWindow):
             self.playbackTimeEdit.blockSignals(False)
 
         if self.playheadLine is not None:
-            self.playheadLine.set_xdata([currentSec, currentSec])
-            self.canvas.draw_idle()
+            self.playheadLine.setValue(currentSec)
 
     def onSliderChanged(self):
         if self.minTimeSlider.value() > self.maxTimeSlider.value():
@@ -503,49 +525,43 @@ class wavWindow(QMainWindow):
         self.maxTimeEdit.blockSignals(False)
 
     def updatePlot(self):
-        self.figure.clear()
-        self.playheadLine = None
         if self.currentWav is None or not self.currentWav.dataLoaded:
-            self.canvas.draw()
+            self.dbCurve.setData([], [])
+            self.dbRmsCurve.setData([], [])
+            self.fftCurve.setData([], [])
             return
         
         showDb = self.cbShowDb.isChecked()
         showFft = self.cbShowFft.isChecked()
-        if not showDb and not showFft:
-            self.canvas.draw()
-            return
         
         minTime = self.minTimeSlider.value() / 100.0
         maxTime = self.maxTimeSlider.value() / 100.0
-        plotCount = (1 if showDb else 0) + (1 if showFft else 0)
-        currentPlotIdx = 1
+
         if showDb:
-            axDb = self.figure.add_subplot(plotCount, 1, currentPlotIdx)
-            currentPlotIdx += 1
+            self.dbPlot.setVisible(True)
             dbData = self.currentWav.dbData
             dbRmsData = self.currentWav.dbRmsData
+            
             if len(dbData) > 0:
                 maskDb = (dbData[:, 0] >= minTime) & (dbData[:, 0] <= maxTime)
-                axDb.plot(dbData[maskDb, 0], dbData[maskDb, 1], label="dB", color="#B0C4DE", alpha=0.7, linewidth=1)
+                self.dbCurve.setData(dbData[maskDb, 0], dbData[maskDb, 1])
+            else:
+                self.dbCurve.setData([], [])
+
             if len(dbRmsData) > 0:
                 maskRms = (dbRmsData[:, 0] >= minTime) & (dbRmsData[:, 0] <= maxTime)
-                axDb.plot(dbRmsData[maskRms, 0], dbRmsData[maskRms, 1], label="dBRMS", color="#D9534F", linewidth=1.5)
-            
-            currentSec = self.mediaPlayer.position() / 1000.0
-            self.playheadLine = axDb.axvline(x=currentSec, color="#E74C3C", linestyle="--", linewidth=1.5)
-
-            axDb.set_title("Sound Level (dB / dBRMS)")
-            axDb.set_xlabel("Time (s)")
-            axDb.set_ylabel("Level (dB)")
+                self.dbRmsCurve.setData(dbRmsData[maskRms, 0], dbRmsData[maskRms, 1])
+            else:
+                self.dbRmsCurve.setData([], [])
 
             if minTime < maxTime:
-                axDb.set_xlim(minTime, maxTime)
-            axDb.set_ylim(-100, 0)
-            axDb.legend(loc="upper right")
-            axDb.grid(True)
+                self.dbPlot.setXRange(minTime, maxTime, padding=0)
+            self.dbPlot.setYRange(-100, 0, padding=0)
+        else:
+            self.dbPlot.setVisible(False)
 
         if showFft:
-            axFft = self.figure.add_subplot(plotCount, 1, currentPlotIdx)
+            self.fftPlot.setVisible(True)
             sampleRate = self.currentWav.sampleRate
             data = self.currentWav.data
             timeArray = self.currentWav.timeArray
@@ -554,32 +570,40 @@ class wavWindow(QMainWindow):
                 slicedData = data[maskSignal]
                 if len(slicedData) > 0:
                     freqs, dbFS = self.currentWav.fft(slicedData)
-                    axFft.plot(freqs, dbFS, color="#2E8B57", linewidth=1)
+                    # Avoid log(0) for pyqtgraph log scale plotting
+                    validMask = freqs > 0
+                    self.fftCurve.setData(freqs[validMask], dbFS[validMask])
+                else:
+                    self.fftCurve.setData([], [])
+            else:
+                self.fftCurve.setData([], [])
 
-            axFft.set_title("Frequency Spectrum")
-            axFft.set_xlabel("Frequency (Hz)")
-            axFft.set_ylabel("Magnitude (dBFS)")
-            axFft.set_xscale("log")
-            axFft.set_xlim(10, 30000)
-            axFft.set_ylim(-120, 0)
-            axFft.grid(True, which="both")
-
-        self.figure.tight_layout()
-        self.canvas.draw()
+            self.fftPlot.setXRange(np.log10(10), np.log10(30000))
+            self.fftPlot.setYRange(-120, 0)
+        else:
+            self.fftPlot.setVisible(False)
 
     def exportPlot(self):
         if self.currentWav is None or not self.currentWav.dataLoaded:
             return
+
+        fileName = f"{self.currentWav.testName}"
+
+        if self.cbShowDb.isChecked and self.cbShowFft.isChecked:
+            fileName += "_comboplot"
+        elif self.cbShowFft.isChecked:
+            fileName += "_freqplot"
+        elif self.cbShowDb.isChecked:
+            fileName += "_dbplot"
+        fileName += ".png"
         
         filePath, _ = QFileDialog.getSaveFileName(
-            self,
-            "Save Plot",
-            f"{self.currentWav.testName}_plot.png",
-            "PNG Image (.png);;PDF File (.pdf);;SVG Vector (.svg)"
+            self, "Save Plot",
+            fileName, "PNG Image (.png)"
         )
 
         if filePath:
-            self.figure.savefig(filePath)
+            self.plotWidget.grab().save(filePath)
 
     def closeEvent(self, event):
         self.mediaPlayer.stop()
