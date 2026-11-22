@@ -48,11 +48,11 @@ class wavWindow(QMainWindow):
 
         # Setup subplots inside the graphics layout
         self.dbPlot = self.plotWidget.addPlot(row=0, col=0)
-        self.dbPlot.setTitle("Sound Level (dB / dBRMS)")
+        self.dbPlot.showGrid(x=False, y=False)
+        self.dbPlot.setTitle("Sound Level")
         self.dbPlot.setLabel("left", "Level", units="dB")
         self.dbPlot.setLabel("bottom", "Time", units="s")
-        self.dbPlot.setYRange(-100, 0)
-        self.dbPlot.showGrid(x=True, y=True)
+        self.dbPlot.setYRange(40, 120)
         self.dbPlot.addLegend()
 
         self.dbCurve = self.dbPlot.plot(pen=pg.mkPen(color="#B0C4DE", width=1), name="dB")
@@ -65,13 +65,18 @@ class wavWindow(QMainWindow):
         self.plotWidget.nextRow()
 
         self.fftPlot = self.plotWidget.addPlot(row=1, col=0)
+        self.fftPlot.showGrid(x=False, y=False)
         self.fftPlot.setTitle("Frequency Spectrum")
-        self.fftPlot.setLabel("left", "Magnitude", units="dBFS")
+        self.fftPlot.setLabel("left", "Magnitude", units="dB")
         self.fftPlot.setLabel("bottom", "Frequency", units="Hz")
+        self.fftPlot.getAxis("bottom").enableAutoSIPrefix(False)
         self.fftPlot.setLogMode(True, False)
         self.fftPlot.setXRange(np.log10(10), np.log10(30000))
-        self.fftPlot.setYRange(-120, 0)
-        self.fftPlot.showGrid(x=True, y=True, alpha=0.7)
+
+        major_ticks = [(exp, f"{10**exp}") for exp in range(0, 6)]
+        self.fftPlot.getAxis("bottom").setTicks([major_ticks])
+
+        self.fftPlot.setYRange(0, 80)
         self.fftCurve = self.fftPlot.plot(pen=pg.mkPen(color="#2E8B57", width=1))
 
         playbackLayout = self.makePlaybackBar()
@@ -556,7 +561,7 @@ class wavWindow(QMainWindow):
 
             if minTime < maxTime:
                 self.dbPlot.setXRange(minTime, maxTime, padding=0)
-            self.dbPlot.setYRange(-100, 0, padding=0)
+            self.dbPlot.setYRange(40, 120, padding=0)
         else:
             self.dbPlot.setVisible(False)
 
@@ -579,7 +584,7 @@ class wavWindow(QMainWindow):
                 self.fftCurve.setData([], [])
 
             self.fftPlot.setXRange(np.log10(10), np.log10(30000))
-            self.fftPlot.setYRange(-120, 0)
+            self.fftPlot.setYRange(0, 80)
         else:
             self.fftPlot.setVisible(False)
 

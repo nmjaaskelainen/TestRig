@@ -53,3 +53,5 @@ T43 - PS V4.1 (No balls)
 T44 - PS V4.1 (No balls, 8 mm)
 T45 - PS V4.1 (Small balls, 8mm)
 T46 - PS V4.1 (Steel wool 1/2, 8mm)
+T47 - PS V4.1 (Steel wool 1/2, 8mm) SUCCESS
+T48 - PS V4.1 (Steel wool 1/2, 8mm)

@@ -1,0 +1,26 @@
+[
+    {
+        "TestNumber": "T40",
+        "Description": "",
+        "MaxdBFS": -34.82,
+        "dBFSrms": -46.97,
+        "SignificantFrequencyHz": 289.3,
+        "FrequencyAmplitude": 29.85
+    },
+    {
+        "TestNumber": "T41",
+        "Description": "",
+        "MaxdBFS": -34.32,
+        "dBFSrms": -49.36,
+        "SignificantFrequencyHz": 436.61,
+        "FrequencyAmplitude": 16.18
+    },
+    {
+        "TestNumber": "T42",
+        "Description": "",
+        "MaxdBFS": -28.25,
+        "dBFSrms": -44.92,
+        "SignificantFrequencyHz": 293.32,
+        "FrequencyAmplitude": 22.39
+    }
+]

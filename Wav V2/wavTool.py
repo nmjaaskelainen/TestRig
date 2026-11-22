@@ -99,13 +99,13 @@ class wavTool:
     def dbDecode(self, data: npt.ArrayLike) -> tuple[npt.ArrayLike, npt.ArrayLike]:
         eps = 1e-12
         absData = np.abs(data) + eps
-        dbSignal = 20 * np.log10(absData)
+        dbSignal = 20 * np.log10(absData) + 142
 
         timeValArray = np.column_stack((self.timeArray, data))
         rmsArray = self.rollingAverage(timeValArray)
 
         rmsVals = np.abs(rmsArray[:, 1]) + eps
-        dbRmsSignal = 20 * np.log10(rmsVals)
+        dbRmsSignal = 20 * np.log10(rmsVals) + 142
         rmsTimeArray = rmsArray[:, 0]
 
         dbData = np.column_stack((self.timeArray, dbSignal))
@@ -125,7 +125,7 @@ class wavTool:
         
         #magnitude to dBFS
         eps = 1e-12
-        fftDbFS = 20 * np.log10(np.maximum(fftMagnitude, eps))
+        fftDbFS = 20 * np.log10(np.maximum(fftMagnitude, eps)) + 142
         return fftFreqs, fftDbFS
 
     #calculate dBFS RMS
